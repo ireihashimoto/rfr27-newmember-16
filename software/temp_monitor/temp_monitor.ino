@@ -25,13 +25,12 @@ void setup() {
   }
 void loop(){
   float temp[NUM_CHANNELS]; //sets up array of 
-  for(int i =0; i<NUM_CHANNElS; i++){ //loops array 
+  for(int i =0; i<NUM_CHANNELS; i++){ //loops array 
     channelselector(i);
-    int adcRead = analogRead(MUXPIN);
+    int adcRead = analogRead(MUX_PIN);
     temp[i]= readingtotemp(adcRead);//takes result and puts it into array
-    //need to fix once i learn to select channel
   }
-  findHIghest(temp[];NUM_CHannels);
+  float maxTemp = findhighest(temp,NUM_CHANNELS);
 }
 
  
