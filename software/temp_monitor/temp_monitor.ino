@@ -5,51 +5,51 @@ const int NUM_CHANNELS = 16;
 void setup() {
   // put your setup code here, to run once:
 }
- float readingtotemp(int steps){
+ float readingToTemp(int steps){
       //convert voltage reading to temperature
       //outputs float
       return 0.0; // placeholder
   }
   //helper functions
-  float stepstovoltage(int steps){
+  float stepsToVoltage(int steps){
     //converts reading to voltage
     return 0.0; //placeholder
   }
-  float voltagetotemp(float voltage){
+  float voltageToTemp(float voltage){
     //converts voltage to temp
     //outputs float
   } 
 
-  bool checkled(float temp){
+  bool checkLed(float temp){
     //checks highest temperature reading above 60C
     //outputs bool
     return true; //placeholder
   }
-  float findhighest(const float temp[], int count){
+  float findHighest(const float temp[], int count){
     // finds highest temperature in array of temperatures
     //output float
     return 0.0; //placeholder
   }
-  void channelselector(int channel){
+  void channelSelector(int channel){
     //takes in channeel and selects
   }
   void ledControl(bool check){
     //takes in bool controls led
   }
-  void I2CSend (float highestTemp){
+  void i2cSend (float highestTemp){
     // takes in highest temp and sends to I2C
   }
 void loop(){
   float temp[NUM_CHANNELS]; //sets up array of 
   for(int i =0; i<NUM_CHANNELS; i++){ //loops array 
-    channelselector(i);
+    channelSelector(i);
     int adcRead = analogRead(MUX_PIN);
-    temp[i]= readingtotemp(adcRead);//takes result and puts it into array
+    temp[i]= readingToTemp(adcRead);//takes result and puts it into array
   }
-  float maxTemp = findhighest(temp,NUM_CHANNELS);
-  bool checks = checkled(maxTemp);
+  float maxTemp = findHighest(temp,NUM_CHANNELS);
+  bool checks = checkLed(maxTemp);
   ledControl(checks);
-  I2CSend(maxTemp);
+  i2cSend(maxTemp);
 }
 
  
