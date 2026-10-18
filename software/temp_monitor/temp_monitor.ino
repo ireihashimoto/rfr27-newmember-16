@@ -31,6 +31,7 @@ void loop(){
     temp[i]= readingtotemp(adcRead);//takes result and puts it into array
   }
   float maxTemp = findhighest(temp,NUM_CHANNELS);
+  bool checks = checkled(float maxTemp);
 }
 
  
