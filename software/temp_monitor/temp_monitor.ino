@@ -1,3 +1,5 @@
+//takes in voltage from mux, converts to temperature, finds max temperature from 16 inputs
+//then reports highest temp through I2C and flags if it is above 60C
 const int MUX_PIN= A0;
 const int NUM_CHANNELS = 16;
 void setup() {
@@ -6,10 +8,12 @@ void setup() {
  float readingtotemp(int steps){
       //convert voltage reading to temperature
       //outputs float
+      return 0.0; // placeholder
   }
   //helper functions
   float stepstovoltage(int steps){
     //converts reading to voltage
+    return 0.0; //placeholder
   }
   float voltagetotemp(float voltage){
     //converts voltage to temp
@@ -19,10 +23,12 @@ void setup() {
   bool checkled(float temp){
     //checks highest temperature reading above 60C
     //outputs bool
+    return true; //placeholder
   }
   float findhighest(const float temp[], int count){
     // finds highest temperature in array of temperatures
     //output float
+    return 0.0; //placeholder
   }
   void channelselector(int channel){
     //takes in channeel and selects
