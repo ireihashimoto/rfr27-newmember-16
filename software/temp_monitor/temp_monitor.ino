@@ -1,4 +1,4 @@
-const int MUX_PIN= A0
+const int MUX_PIN= A0;
 const int NUM_CHANNELS = 16;
 void setup() {
   // put your setup code here, to run once:
