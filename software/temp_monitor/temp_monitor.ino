@@ -1,10 +1,11 @@
-const int MUX_PIN= A0;// to do match with schematic
+const int MUX_PIN= A0
 const int NUM_CHANNELS = 16;
 void setup() {
   // put your setup code here, to run once:
 }
  float readingtotemp(int steps){
       //convert voltage reading to temperature
+      //outputs float
   }
   //helper functions
   float stepstovoltage(int steps){
@@ -12,13 +13,15 @@ void setup() {
   }
   float voltagetotemp(float voltage){
     //converts voltage to temp
+    //outputs float
   } 
   bool checkled(float temp){
     //checks highest temperature reading above 60C
-    //outputs true false
+    //outputs bool
   }
   float findhighest(const float temp[], int count){
     // finds highest temperature in array of temperatures
+    //output float
   }
   void channelselector(int channel){
     //takes in channeel and selects
@@ -31,7 +34,7 @@ void loop(){
     temp[i]= readingtotemp(adcRead);//takes result and puts it into array
   }
   float maxTemp = findhighest(temp,NUM_CHANNELS);
-  bool checks = checkled(float maxTemp);
+  bool checks = checkled(maxTemp);
 }
 
  
