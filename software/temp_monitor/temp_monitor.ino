@@ -71,6 +71,7 @@ void loop(){
   float temp[NUM_CHANNELS]; //sets up array of 
   for(int i =0; i < NUM_CHANNELS; i++){ //loops array 
     channelSelector(i);
+    delayMicroseconds(1);
     int adcRead = analogRead(MUX_PIN);
     temp[i]= readingToTemp(adcRead);//takes result and puts it into array
   }
