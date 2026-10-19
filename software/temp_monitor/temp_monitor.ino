@@ -1,50 +1,75 @@
 //takes in voltage from mux, converts to temperature, finds max temperature from 16 inputs
 //then reports highest temp through I2C and flags if it is above 60C
-const int MUX_PIN =A0;// PLACEHOLDER WAIT UNTIL SCHEMATIC
+const int MUX_PIN = 14;// PLACEHOLDER WAIT UNTIL SCHEMATIC
+const int LED_PIN = #;
 const int NUM_CHANNELS = 16;
 const float SENSOR_VOLTAGE[33] ={2.44, 2.42, 2.40, 2.38, 2.35, 2.32, 2.27, 2.23, 2.17, 2.11, 2.05,
 1.99, 1.92, 1.86, 1.80, 1.74, 1.68, 1.63, 1.59, 1.55, 1.51, 1.48,
 1.45, 1.43, 1.40, 1.38, 1.37, 1.35, 1.34, 1.33, 1.32, 1.31, 1.30};
+const float startTemp = -40.0f;
+const float stepTemp = 5.0f;
 void setup() {
   // put your setup code here, to run once:
+  pinMode(MUX_PIN, INPUT);
+  pinMode(LED_PIN, OUTPUT);
+  digitalWrite(LED_PIN, LOW);
 }
  float readingToTemp(int steps){
-      //convert voltage reading to temperature
-      //outputs float
-      return 0.0; // placeholder
+      // converts steps to voltage to temp
+      return voltageToTemp(stepsToVoltage(steps));
   }
-  //helper functions
+
   float stepsToVoltage(int steps){
-    //converts reading to voltage
-    return 0.0; //placeholder
+    return steps*5.0f/1023;
   }
   float voltageToTemp(float voltage){
-    //converts voltage to temp
-    //outputs float
+    // might have to check if voltage is out of bounds here
+    for (int i = 0; i < 32; i += 1) {
+      if (SENSOR_VOLTAGE[i] == voltage) {
+        return startTemp+i*stepTemp;
+      }
+      else if(voltage < SENSOR_VOLTAGE[i] && voltage > SENSOR_VOLTAGE[i+1]) {
+        float vHigh = SENSOR_VOLTAGE[i];
+        float vLow = SENSOR_VOLTAGE[i+1];
+        float weight = (vHigh-voltage)/(vHigh-vLow);
+        return startTemp+(i+weight)*stepTemp;
+      }
+    }
+    return startTemp+32*stepTemp;
   } 
 
   bool checkLed(float temp){
     //checks highest temperature reading above 60C
-    //outputs bool
-    return true; //placeholder
+    // outputs bool
+    if (temp > 60) {
+      return true;
+    }
+    return false;
   }
   float findHighest(const float temp[], int count){
-    // finds highest temperature in array of temperatures
-    //output float
-    return 0.0; //placeholder
+    float currMax = temp[0];
+    for (int i = 1; i < count; i += 1) {
+      if (temp[i] > currMax) {
+        currMax = temp[i];
+      } 
+    }
+    return currMax;
   }
+  
   void channelSelector(int channel){
     //takes in channeel and selects
   }
   void ledControl(bool check){
-    //takes in bool controls led
+    if (check) {
+      digitalWrite(LED_PIN, HIGH);
+    }
   }
   void i2cSend (float highestTemp){
     // takes in highest temp and sends to I2C
   }
 void loop(){
   float temp[NUM_CHANNELS]; //sets up array of 
-  for(int i =0; i<NUM_CHANNELS; i++){ //loops array 
+  for(int i =0; i < NUM_CHANNELS; i++){ //loops array 
     channelSelector(i);
     int adcRead = analogRead(MUX_PIN);
     temp[i]= readingToTemp(adcRead);//takes result and puts it into array
