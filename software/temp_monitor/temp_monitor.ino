@@ -20,7 +20,7 @@ void setup() {
   }
 
   float stepsToVoltage(int steps){
-    return steps*5.0f/1023;
+    return steps*5.0f/1024;
   }
   float voltageToTemp(float voltage){
     // might have to check if voltage is out of bounds here
