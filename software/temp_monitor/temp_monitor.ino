@@ -1,6 +1,6 @@
 //takes in voltage from mux, converts to temperature, finds max temperature from 16 inputs
 //then reports highest temp through I2C and flags if it is above 60C
-const int MUX_PIN = 14;// PLACEHOLDER WAIT UNTIL SCHEMATIC
+const int MUX_PIN = A0;// PLACEHOLDER WAIT UNTIL SCHEMATIC
 const int LED_PIN = #;
 const int NUM_CHANNELS = 16;
 const float SENSOR_VOLTAGE[33] ={2.44, 2.42, 2.40, 2.38, 2.35, 2.32, 2.27, 2.23, 2.17, 2.11, 2.05,
