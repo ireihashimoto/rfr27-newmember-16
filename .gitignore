@@ -1,0 +1,13 @@
+# Altium generated files
+History/
+__Previews/
+Project Logs for*/
+Project Outputs for*/
+*.PrjPcbStructure
+*.SchDocPreview
+*.PcbDocPreview
+*.LOG
+
+# OS clutter
+Thumbs.db
+.DS_Store
