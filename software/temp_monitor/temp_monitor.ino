@@ -1,6 +1,14 @@
 //takes in voltage from mux, converts to temperature, finds max temperature from 16 inputs
 //then reports highest temp through I2C and flags if it is above 60C
-const int MUX_PIN = A0;// PLACEHOLDER WAIT UNTIL SCHEMATIC
+//takes in voltage from mux, converts to temperature, finds max temperature from 16 inputs
+//then reports highest temp through I2C and flags if it is above 60C
+
+const int MUX_PIN = A0; // MUX analog pin
+// MUX digital pins
+const int pin_A = 7;
+const int pin_B = 8;
+const int pin_C = 9;
+const int pin_D = 10;
 const int LED_PIN = 6;
 const int NUM_CHANNELS = 16;
 const float AMP_GAIN = 2
@@ -10,10 +18,20 @@ const float SENSOR_VOLTAGE[33] ={2.44, 2.42, 2.40, 2.38, 2.35, 2.32, 2.27, 2.23,
 const float startTemp = -40.0f;
 const float stepTemp = 5.0f;
 void setup() {
-  // put your setup code here, to run once:
   pinMode(MUX_PIN, INPUT);
+
   pinMode(LED_PIN, OUTPUT);
   digitalWrite(LED_PIN, LOW);
+  
+  pinMode(pin_A, OUTPUT);
+  pinMode(pin_B, OUTPUT);
+  pinMode(pin_C, OUTPUT);
+  pinMode(pin_D, OUTPUT);
+  
+  digitalWrite(pin_A, LOW);
+  digitalWrite(pin_B, LOW);
+  digitalWrite(pin_C, LOW);
+  digitalWrite(pin_D, LOW);
 }
  float readingToTemp(int steps){
       // converts steps to voltage to temp
