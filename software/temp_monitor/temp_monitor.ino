@@ -77,6 +77,10 @@ void setup() {
   
   void channelSelector(int channel){
     //takes in channeel and selects
+    digitalWrite(pin_A,bitRead(channel,0));
+    digitalWrite(pin_B,bitRead(channel,1));
+    digitalWrite(pin_C,bitRead(channel,2));
+    digitalWrite(pin_D, bitRead(channel,3));
   }
   void ledControl(bool check){
     if (check) {
