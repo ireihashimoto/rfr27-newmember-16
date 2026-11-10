@@ -17,6 +17,10 @@ const float SENSOR_VOLTAGE[33] ={2.44, 2.42, 2.40, 2.38, 2.35, 2.32, 2.27, 2.23,
 1.45, 1.43, 1.40, 1.38, 1.37, 1.35, 1.34, 1.33, 1.32, 1.31, 1.30};
 const float startTemp = -40.0f;
 const float stepTemp = 5.0f;
+unsigned long lastToggle = 0;
+bool ledOn = false; 
+const unsigned long SLOW_BLINK = 1000;
+const unsigned long FAST_BLINK = 200;
 void setup() {
   pinMode(MUX_PIN, INPUT);
 
@@ -32,6 +36,7 @@ void setup() {
   digitalWrite(pin_B, LOW);
   digitalWrite(pin_C, LOW);
   digitalWrite(pin_D, LOW);
+  Serial.begin(9600);
 }
  float readingToTemp(int steps){
       // converts steps to voltage to temp
@@ -83,8 +88,17 @@ void setup() {
     digitalWrite(pin_D, bitRead(channel,3));
   }
   void ledControl(bool check){
-    if (check) {
-      digitalWrite(LED_PIN, HIGH);
+    unsigned long interval;
+    if(check==true){
+      interval = FAST_BLINK;
+    }
+    else{
+      interval = SLOW_BLINK;
+    }
+    if (millis()-lastToggle >= interval){
+      ledOn = !ledOn;
+      digitalWrite(LED_PIN,ledOn);
+      lastToggle= millis();
     }
   }
   void i2cSend (float highestTemp){
@@ -97,6 +111,12 @@ void loop(){
     delayMicroseconds(1);
     int adcRead = analogRead(MUX_PIN);
     temp[i]= readingToTemp(adcRead);//takes result and puts it into array
+    Serial.print(i);
+    Serial.print(" ");
+    Serial.print(adcRead);
+    Serial.print(" ");
+    Serial.println(temp[i]);
+    delay(500);
   }
   float maxTemp = findHighest(temp,NUM_CHANNELS);
   bool checks = checkLed(maxTemp);
