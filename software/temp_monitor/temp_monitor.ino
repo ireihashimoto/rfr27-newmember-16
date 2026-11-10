@@ -2,7 +2,7 @@
 //then reports highest temp through I2C and flags if it is above 60C
 //takes in voltage from mux, converts to temperature, finds max temperature from 16 inputs
 //then reports highest temp through I2C and flags if it is above 60C
-
+#include <Wire.h>
 const int MUX_PIN = A0; // MUX analog pin
 // MUX digital pins
 const int pin_A = 7;
@@ -21,6 +21,7 @@ unsigned long lastToggle = 0;
 bool ledOn = false; 
 const unsigned long SLOW_BLINK = 1000;
 const unsigned long FAST_BLINK = 200;
+const int I2C_ADDRESS = 8;
 void setup() {
   pinMode(MUX_PIN, INPUT);
 
@@ -37,6 +38,7 @@ void setup() {
   digitalWrite(pin_C, LOW);
   digitalWrite(pin_D, LOW);
   Serial.begin(9600);
+  Wire.begin();
 }
  float readingToTemp(int steps){
       // converts steps to voltage to temp
@@ -103,6 +105,11 @@ void setup() {
   }
   void i2cSend (float highestTemp){
     // takes in highest temp and sends to I2C
+    int tempX10 = highestTemp*10;
+    Wire.beginTransmission(I2C_ADDRESS);
+    Wire.write(highByte(tempX10));
+    Wire.write(lowByte(tempX10));
+    Wire.endTransmission();
   }
 void loop(){
   float temp[NUM_CHANNELS]; //sets up array of 
@@ -116,8 +123,8 @@ void loop(){
     Serial.print(adcRead);
     Serial.print(" ");
     Serial.println(temp[i]);
-    delay(500);
   }
+  delay(500);
   float maxTemp = findHighest(temp,NUM_CHANNELS);
   bool checks = checkLed(maxTemp);
   ledControl(checks);
