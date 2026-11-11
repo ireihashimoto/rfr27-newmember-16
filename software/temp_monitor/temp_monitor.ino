@@ -49,6 +49,12 @@ void setup() {
     return steps*5.0f/1024/AMP_GAIN;
   }
   float voltageToTemp(float voltage){
+    if(voltage>SENSOR_VOLTAGE[0]){
+      return startTemp;
+    }
+    else if(voltage<SENSOR_VOLTAGE[32]){
+      return startTemp + 32*stepTemp;
+    }
     // might have to check if voltage is out of bounds here
     for (int i = 0; i < 32; i += 1) {
       if (SENSOR_VOLTAGE[i] == voltage) {
