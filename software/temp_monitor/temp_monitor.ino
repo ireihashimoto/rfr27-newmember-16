@@ -1,7 +1,5 @@
 //takes in voltage from mux, converts to temperature, finds max temperature from 16 inputs
 //then reports highest temp through I2C and flags if it is above 60C
-//takes in voltage from mux, converts to temperature, finds max temperature from 16 inputs
-//then reports highest temp through I2C and flags if it is above 60C
 #include <Wire.h>
 const int MUX_PIN = A0; // MUX analog pin
 // MUX digital pins
@@ -18,10 +16,11 @@ const float SENSOR_VOLTAGE[33] ={2.44, 2.42, 2.40, 2.38, 2.35, 2.32, 2.27, 2.23,
 const float startTemp = -40.0f;
 const float stepTemp = 5.0f;
 unsigned long lastToggle = 0;
+volatile int latestTempX10 = 0;
 bool ledOn = false; 
 const unsigned long SLOW_BLINK = 1000;
 const unsigned long FAST_BLINK = 200;
-const int I2C_ADDRESS = 8;
+const int I2C_ADDRESS = 0x08;
 void setup() {
   pinMode(MUX_PIN, INPUT);
 
@@ -37,8 +36,9 @@ void setup() {
   digitalWrite(pin_B, LOW);
   digitalWrite(pin_C, LOW);
   digitalWrite(pin_D, LOW);
-  Serial.begin(9600);
-  Wire.begin();
+  Serial.begin(115200);
+  Wire.begin(I2C_ADDRESS);
+  Wire.onRequest(onReq);
 }
  float readingToTemp(int steps){
       // converts steps to voltage to temp
@@ -55,7 +55,6 @@ void setup() {
     else if(voltage<SENSOR_VOLTAGE[32]){
       return startTemp + 32*stepTemp;
     }
-    // might have to check if voltage is out of bounds here
     for (int i = 0; i < 32; i += 1) {
       if (SENSOR_VOLTAGE[i] == voltage) {
         return startTemp+i*stepTemp;
@@ -79,6 +78,7 @@ void setup() {
     return false;
   }
   float findHighest(const float temp[], int count){
+    //finds highest temperature in array of temperatures
     float currMax = temp[0];
     for (int i = 1; i < count; i += 1) {
       if (temp[i] > currMax) {
@@ -89,13 +89,14 @@ void setup() {
   }
   
   void channelSelector(int channel){
-    //takes in channeel and selects
+    //takes in channeel and selects pin
     digitalWrite(pin_A,bitRead(channel,0));
     digitalWrite(pin_B,bitRead(channel,1));
     digitalWrite(pin_C,bitRead(channel,2));
     digitalWrite(pin_D, bitRead(channel,3));
   }
   void ledControl(bool check){
+    //checks whether temp is true and changes led
     unsigned long interval;
     if(check==true){
       interval = FAST_BLINK;
@@ -110,12 +111,14 @@ void setup() {
     }
   }
   void i2cSend (float highestTemp){
-    // takes in highest temp and sends to I2C
-    int tempX10 = highestTemp*10;
-    Wire.beginTransmission(I2C_ADDRESS);
-    Wire.write(highByte(tempX10));
-    Wire.write(lowByte(tempX10));
-    Wire.endTransmission();
+    // takes in highest temp and stores
+    latestTempX10 = highestTemp*10;
+  }
+  void onReq(){
+    //triggers when board calls for data
+    //then sends the temp x10 as two bytes
+    Wire.write(highByte(latestTempX10));
+    Wire.write(lowByte(latestTempX10));
   }
 void loop(){
   float temp[NUM_CHANNELS]; //sets up array of 
@@ -130,7 +133,6 @@ void loop(){
     Serial.print(" ");
     Serial.println(temp[i]);
   }
-  delay(500);
   float maxTemp = findHighest(temp,NUM_CHANNELS);
   bool checks = checkLed(maxTemp);
   ledControl(checks);
