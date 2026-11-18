@@ -6,9 +6,9 @@ const int MUX_PIN = A0; // MUX analog pin
 const int pin_A = 7;
 const int pin_B = 8;
 const int pin_C = 9;
-const int pin_D = 10;
 const int LED_PIN = 6;
-const int NUM_CHANNELS = 16;
+const int ENABLE_PIN = 11;
+const int NUM_CHANNELS = 8;
 const float AMP_GAIN = 2;
 const float SENSOR_VOLTAGE[33] ={2.44, 2.42, 2.40, 2.38, 2.35, 2.32, 2.27, 2.23, 2.17, 2.11, 2.05,
 1.99, 1.92, 1.86, 1.80, 1.74, 1.68, 1.63, 1.59, 1.55, 1.51, 1.48,
@@ -26,16 +26,14 @@ void setup() {
 
   pinMode(LED_PIN, OUTPUT);
   digitalWrite(LED_PIN, LOW);
-  
+  pinMode(ENABLE_PIN,OUTPUT);
+
   pinMode(pin_A, OUTPUT);
   pinMode(pin_B, OUTPUT);
   pinMode(pin_C, OUTPUT);
-  pinMode(pin_D, OUTPUT);
-  
   digitalWrite(pin_A, LOW);
   digitalWrite(pin_B, LOW);
   digitalWrite(pin_C, LOW);
-  digitalWrite(pin_D, LOW);
   Serial.begin(115200);
   Wire.begin(I2C_ADDRESS);
   Wire.onRequest(onReq);
@@ -93,7 +91,6 @@ void setup() {
     digitalWrite(pin_A,bitRead(channel,0));
     digitalWrite(pin_B,bitRead(channel,1));
     digitalWrite(pin_C,bitRead(channel,2));
-    digitalWrite(pin_D, bitRead(channel,3));
   }
   void ledControl(bool check){
     //checks whether temp is true and changes led
@@ -121,7 +118,7 @@ void setup() {
     Wire.write(lowByte(latestTempX10));
   }
 void loop(){
-  float temp[NUM_CHANNELS]; //sets up array of 
+  float temp[NUM_CHANNELS]; //sets up array of temps
   for(int i =0; i < NUM_CHANNELS; i++){ //loops array 
     channelSelector(i);
     delayMicroseconds(1);
