@@ -1,4 +1,4 @@
-//takes in voltage from mux, converts to temperature, finds max temperature from 16 inputs
+//takes in voltage from mux, converts to temperature, finds max temperature from 8 inputs
 //then reports highest temp through I2C and flags if it is above 60C
 #include <Wire.h>
 const int MUX_PIN = A0; // MUX analog pin
@@ -27,6 +27,7 @@ void setup() {
   pinMode(LED_PIN, OUTPUT);
   digitalWrite(LED_PIN, LOW);
   pinMode(ENABLE_PIN,OUTPUT);
+  digitalWrite(ENABLE_PIN, LOW);
 
   pinMode(pin_A, OUTPUT);
   pinMode(pin_B, OUTPUT);
