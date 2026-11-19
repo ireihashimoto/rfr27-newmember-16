@@ -34,6 +34,7 @@ void setup() {
   digitalWrite(pin_A, LOW);
   digitalWrite(pin_B, LOW);
   digitalWrite(pin_C, LOW);
+  digitalWrite(ENABLE_PIN, LOW);
   Serial.begin(115200);
   Wire.begin(I2C_ADDRESS);
   Wire.onRequest(onReq);
@@ -135,5 +136,3 @@ void loop(){
   ledControl(checks);
   i2cSend(maxTemp);
 }
-
- 
